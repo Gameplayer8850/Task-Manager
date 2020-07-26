@@ -22,6 +22,7 @@ namespace TM.Forms
             this.tasks = tasks;
             this.formType = formType;
             this.id = id;
+            if(formType==Global_Data.FormType.Edit) fill_data();
         }
 
         private void checkBoxComissioned_date_CheckedChanged(object sender, EventArgs e)
@@ -52,6 +53,7 @@ namespace TM.Forms
                 if (!tasks.Any()) task.id = 1;
                 else task.id = tasks.Last().id + 1;
             }
+            else task.id = this.id;
             task.program_name = textBoxProgram.Text;
             task.project_name = textBoxProject.Text;
             task.description = richTextBoxDescription.Text;
@@ -72,7 +74,39 @@ namespace TM.Forms
         }
 
         private void fill_data() {
-
+            Data.Task old = tasks.Find(x => x.id == id);
+            if (old == null) {
+                MessageBox.Show("Nie znaleziono podanego zadania.", "Błąd");
+                this.Close();
+            }
+            textBoxProgram.Text = old.program_name;
+            textBoxProject.Text = old.project_name;
+            richTextBoxDescription.Text = old.description;
+            if (old.commissioned_date != default(DateTime))
+            {
+                dateComissioned.Value = old.commissioned_date;
+                checkBoxComissioned_date.Checked = true;
+            }
+            else checkBoxComissioned_date.Checked = false;
+            if (old.deadline_date != default(DateTime))
+            {
+                dateDeadline.Value = old.deadline_date;
+                checkBoxDeadline.Checked = true;
+            }
+            else checkBoxDeadline.Checked = false;
+            if (old.start_date != default(DateTime))
+            {
+                dateStart.Value = old.start_date;
+                checkBoxStart.Checked = true;
+            }
+            else checkBoxStart.Checked = false;
+            if (old.end_date != default(DateTime))
+            {
+                dateEnd.Value = old.end_date;
+                checkBoxEnd.Checked = true;
+            }
+            else checkBoxEnd.Checked = false;
+            checkBoxAccept.Checked = old.confirmed;
         }
     }
 }

@@ -21,6 +21,7 @@ namespace TM
         List<Data.Task> finished = new List<Data.Task>();
         List<Data.Task> confirmed = new List<Data.Task>();
         Global_Data.Mode current_mode;
+        Boolean new_file = false;
         public Main()
         {
             InitializeComponent();
@@ -34,8 +35,9 @@ namespace TM
             buttonNew.Enabled = true;
             if (!fm.File_Exist()) {
                 fm.File_Save(null);
-                MessageBox.Show("Utworzono pliki lokalne.", "Informacja");
+                new_file = true;
                 buttonNew.Enabled = true;
+                radioActive.Select();
                 return;
             }
             fill_with_data();
@@ -44,6 +46,14 @@ namespace TM
                 fill_grid(Global_Data.Mode.Active);
             }
 
+        } 
+        private void Main_Shown(object sender, EventArgs e)
+        {
+            if (new_file)
+            {
+                MessageBox.Show("Utworzono pliki lokalne.", "Informacja");
+                new_file = false;
+            }
         }
         private void buttons_disable() {
             radioActive.Enabled = false;
@@ -80,24 +90,82 @@ namespace TM
                 var source = new BindingSource();
                 source.DataSource = active;
                 gridTask.DataSource = source;
+                gridTask.Columns[0].HeaderText = "Id";
+                gridTask.Columns[1].HeaderText = "Program";
+                gridTask.Columns[2].HeaderText = "Projekt";
+                gridTask.Columns[3].HeaderText = "Opis";
+                gridTask.Columns[4].HeaderText = "Data Rozpoczęcia";
+                gridTask.Columns[5].HeaderText = "Data Zakończenia";
+                gridTask.Columns[6].HeaderText = "Data Zlecenia";
+                gridTask.Columns[7].HeaderText = "Data Ostateczna";
+                gridTask.Columns[8].HeaderText = "Zatwierdzone";
             }
             else if (mode == Global_Data.Mode.Finished)
             {
                 var source = new BindingSource();
                 source.DataSource = finished;
                 gridTask.DataSource = source;
+                gridTask.DataSource = source;
+                gridTask.Columns[0].HeaderText = "Id";
+                gridTask.Columns[1].HeaderText = "Program";
+                gridTask.Columns[2].HeaderText = "Projekt";
+                gridTask.Columns[3].HeaderText = "Opis";
+                gridTask.Columns[4].HeaderText = "Data Rozpoczęcia";
+                gridTask.Columns[5].HeaderText = "Data Zakończenia";
+                gridTask.Columns[6].HeaderText = "Data Zlecenia";
+                gridTask.Columns[7].HeaderText = "Data Ostateczna";
+                gridTask.Columns[8].HeaderText = "Zatwierdzone";
             }
             else if (mode == Global_Data.Mode.Confirmed)
             {
                 var source = new BindingSource();
                 source.DataSource = confirmed;
                 gridTask.DataSource = source;
+                gridTask.DataSource = source;
+                gridTask.Columns[0].HeaderText = "Id";
+                gridTask.Columns[1].HeaderText = "Program";
+                gridTask.Columns[2].HeaderText = "Projekt";
+                gridTask.Columns[3].HeaderText = "Opis";
+                gridTask.Columns[4].HeaderText = "Data Rozpoczęcia";
+                gridTask.Columns[5].HeaderText = "Data Zakończenia";
+                gridTask.Columns[6].HeaderText = "Data Zlecenia";
+                gridTask.Columns[7].HeaderText = "Data Ostateczna";
+                gridTask.Columns[8].HeaderText = "Zatwierdzone";
             }
             else {
                 var source = new BindingSource();
                 source.DataSource = tasks;
                 gridTask.DataSource = source;
+                gridTask.DataSource = source;
+                gridTask.Columns[0].HeaderText = "Id";
+                gridTask.Columns[1].HeaderText = "Program";
+                gridTask.Columns[2].HeaderText = "Projekt";
+                gridTask.Columns[3].HeaderText = "Opis";
+                gridTask.Columns[4].HeaderText = "Data Rozpoczęcia";
+                gridTask.Columns[5].HeaderText = "Data Zakończenia";
+                gridTask.Columns[6].HeaderText = "Data Zlecenia";
+                gridTask.Columns[7].HeaderText = "Data Ostateczna";
+                gridTask.Columns[8].HeaderText = "Zatwierdzone";
             }
+        }
+
+        private void radioSelection() {
+            if (current_mode == Global_Data.Mode.Active)
+            {
+                if (!active.Any()) radioAll.Select();
+                else radioActive.Checked = true;
+            } 
+            else if (current_mode == Global_Data.Mode.Finished)
+            {
+                if (!finished.Any()) radioAll.Select();
+                else radioFinished.Checked = true;
+            } 
+            else if (current_mode == Global_Data.Mode.Confirmed)
+            {
+                if (!confirmed.Any()) radioAll.Select();
+                else radioConfirmed.Checked = true;
+            } 
+            else radioAll.Checked = true;
         }
 
         private void radioActive_CheckedChanged(object sender, EventArgs e)
@@ -127,11 +195,44 @@ namespace TM
             at.Dispose();
             fill_with_data();
             fill_grid(current_mode);
+            radioSelection();
         }
 
         private void buttonEdit_Click(object sender, EventArgs e)
         {
-            //int id
+            int id = (int)gridTask.SelectedRows[0].Cells[0].Value;
+            Add_Task at = new Add_Task(tasks, Global_Data.FormType.Edit, id);
+            at.ShowDialog();
+            at.Dispose();
+            fill_with_data();
+            fill_grid(current_mode);
+            radioSelection();
         }
+
+        private void buttonDelete_Click(object sender, EventArgs e)
+        {
+            int id = (int)gridTask.SelectedRows[0].Cells[0].Value;
+            if(MessageBox.Show("Czy napewno chcesz usunąć zadanie o id: \""+id+"\"", "Ostrzeżenie", MessageBoxButtons.YesNo)==DialogResult.No) return;
+            tasks.RemoveAt(tasks.FindIndex(x=>x.id==id));
+            fm.File_Save(tasks);
+            fill_with_data();
+            fill_grid(current_mode);
+            radioSelection();
+        }
+
+        private void gridTask_SelectionChanged(object sender, EventArgs e)
+        {
+            if (gridTask.SelectedRows.Count == 0||gridTask.SelectedRows[0].Index < 0) {
+                buttonEdit.Enabled = false;
+                buttonDelete.Enabled = false;
+            }
+            else
+            {
+                buttonEdit.Enabled = true;
+                buttonDelete.Enabled = true;
+            }
+        }
+
+       
     }
 }
