@@ -87,66 +87,34 @@ namespace TM
             current_mode = mode;
             if (mode == Global_Data.Mode.Active)
             {
-                var source = new BindingSource();
-                source.DataSource = active;
-                gridTask.DataSource = source;
-                gridTask.Columns[0].HeaderText = "Id";
-                gridTask.Columns[1].HeaderText = "Program";
-                gridTask.Columns[2].HeaderText = "Projekt";
-                gridTask.Columns[3].HeaderText = "Opis";
-                gridTask.Columns[4].HeaderText = "Data Rozpoczęcia";
-                gridTask.Columns[5].HeaderText = "Data Zakończenia";
-                gridTask.Columns[6].HeaderText = "Data Zlecenia";
-                gridTask.Columns[7].HeaderText = "Data Ostateczna";
-                gridTask.Columns[8].HeaderText = "Zatwierdzone";
+                create_source(active);
             }
             else if (mode == Global_Data.Mode.Finished)
             {
-                var source = new BindingSource();
-                source.DataSource = finished;
-                gridTask.DataSource = source;
-                gridTask.DataSource = source;
-                gridTask.Columns[0].HeaderText = "Id";
-                gridTask.Columns[1].HeaderText = "Program";
-                gridTask.Columns[2].HeaderText = "Projekt";
-                gridTask.Columns[3].HeaderText = "Opis";
-                gridTask.Columns[4].HeaderText = "Data Rozpoczęcia";
-                gridTask.Columns[5].HeaderText = "Data Zakończenia";
-                gridTask.Columns[6].HeaderText = "Data Zlecenia";
-                gridTask.Columns[7].HeaderText = "Data Ostateczna";
-                gridTask.Columns[8].HeaderText = "Zatwierdzone";
+                create_source(finished);
             }
             else if (mode == Global_Data.Mode.Confirmed)
             {
-                var source = new BindingSource();
-                source.DataSource = confirmed;
-                gridTask.DataSource = source;
-                gridTask.DataSource = source;
-                gridTask.Columns[0].HeaderText = "Id";
-                gridTask.Columns[1].HeaderText = "Program";
-                gridTask.Columns[2].HeaderText = "Projekt";
-                gridTask.Columns[3].HeaderText = "Opis";
-                gridTask.Columns[4].HeaderText = "Data Rozpoczęcia";
-                gridTask.Columns[5].HeaderText = "Data Zakończenia";
-                gridTask.Columns[6].HeaderText = "Data Zlecenia";
-                gridTask.Columns[7].HeaderText = "Data Ostateczna";
-                gridTask.Columns[8].HeaderText = "Zatwierdzone";
+                create_source(confirmed);
             }
             else {
-                var source = new BindingSource();
-                source.DataSource = tasks;
-                gridTask.DataSource = source;
-                gridTask.DataSource = source;
-                gridTask.Columns[0].HeaderText = "Id";
-                gridTask.Columns[1].HeaderText = "Program";
-                gridTask.Columns[2].HeaderText = "Projekt";
-                gridTask.Columns[3].HeaderText = "Opis";
-                gridTask.Columns[4].HeaderText = "Data Rozpoczęcia";
-                gridTask.Columns[5].HeaderText = "Data Zakończenia";
-                gridTask.Columns[6].HeaderText = "Data Zlecenia";
-                gridTask.Columns[7].HeaderText = "Data Ostateczna";
-                gridTask.Columns[8].HeaderText = "Zatwierdzone";
+                create_source(tasks);
             }
+        }
+
+        private void create_source(List<Data.Task> list) {
+            var source = new BindingSource();
+            source.DataSource = list;
+            gridTask.DataSource = source;
+            gridTask.Columns[0].HeaderText = "Id";
+            gridTask.Columns[1].HeaderText = "Program";
+            gridTask.Columns[2].HeaderText = "Projekt";
+            gridTask.Columns[3].HeaderText = "Opis";
+            gridTask.Columns[4].HeaderText = "Data Rozpoczęcia";
+            gridTask.Columns[5].HeaderText = "Data Zakończenia";
+            gridTask.Columns[6].HeaderText = "Data Zlecenia";
+            gridTask.Columns[7].HeaderText = "Data Ostateczna";
+            gridTask.Columns[8].HeaderText = "Zatwierdzone";
         }
 
         private void radioSelection() {
