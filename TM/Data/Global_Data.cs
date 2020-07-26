@@ -6,10 +6,15 @@ using System.Threading.Tasks;
 
 namespace TM.Data
 {
-    class Global_Data
+    public class Global_Data
     {
         public static String path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\TM";
         public static String file_name = "TM_data.xml";
-        public static Boolean file_exist;
+        public enum Mode {
+            Active, Finished, Confirmed, All
+        }
+        public enum FormType {
+            New, Edit
+        }
     }
 }
